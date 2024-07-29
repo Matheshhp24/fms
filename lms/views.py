@@ -52,7 +52,7 @@ def notification_save(notification_username,notification_message):
 def send_email(subject, body, to_email):#This is email sending function
     # Create the MIME object
     message = MIMEMultipart()
-    message['From'] ="freefireoff2020@gmail.com"
+    message['From'] ="srecfms@gmail.com"
     message['To'] = to_email
     message['Subject'] = subject
 
@@ -66,10 +66,10 @@ def send_email(subject, body, to_email):#This is email sending function
             server.starttls()
 
             # Log in to the SMTP server
-            server.login('freefireoff2020', 'ctps wjel lklv whfg')
+            server.login('srecfms@gmail.com', 'lusz qtlw zwbw ctyw')
 
             # Send the email
-            server.sendmail('freefireoff2020', to_email, message.as_string())
+            server.sendmail('srecfms@gmail.com', to_email, message.as_string())
 
             print("Email sent successfully. to ", to_email)
         except Exception as e:
@@ -921,7 +921,7 @@ def admin_page(request , username=None):
     if request.user.is_superuser or principal_username:
         print("User is a superuser")
         common_context = get_common_context(request,principal_username)
-        if request.resolver_match.url_name == "NewRequests":
+        if request.resolver_match.url_name == "NewRequests" and principal_username:
             print("New Request")
 
             result = casual_leave.objects.all()
@@ -2312,13 +2312,42 @@ def requests_handling(request):
 
 
 
-        elif data.get('partial')  == 'no':   
+        elif data.get('partial')  == 'no': 
+            print(data)  
             leave_type = data.get('rowData[leave_type]')
             unique_id = int(data.get('rowData[unique_id]'))
             username = data.get('rowData[username]')
             print(username)
             to_email = User.objects.get(username=username).email
             print(to_email)
+            body = f"""
+
+    Hello {data.get('rowData[username]')},
+
+    We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
+
+         Request Details:
+            - Leave Type: {data.get('rowData[leave_type]')}
+            - Applied Date: {data.get('rowData[date_Applied]')}
+            - From Date: {data.get('rowData[from_Date]')}
+            - To Date: {data.get('rowData[to_Date]')}
+            - Reason: {data.get('rowData[reason]')}
+            - Session: {data.get('rowData[session]')}
+            - Remaining Leave: {data.get('rowData[remaining]')}
+            - Total Leave: {data.get('rowData[total_leave]')}
+
+            Status: {data.get('action')}
+
+        If you have any questions or concerns, please feel free to contact us.
+
+    Best regards,
+        Administrative Office,
+        Sri Ramakrishna Engineering College,
+        Vattamalaipalayam,
+        Coimbatore - 641022.
+    """
+                
+
             if leave_type == 'LOP Leave':
                 result = LOP_leave.objects.filter(unique_id = unique_id)
                 result.update(status=data.get('action'))
@@ -2326,34 +2355,7 @@ def requests_handling(request):
                 username = data.get('rowData[username]')
                 
                 subject = "Leave Update"
-                body = f"""
-
-                Hello {data.get('rowData[username]')},
-
-                We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
-
-                Request Details:
-                - Leave Type: {data.get('rowData[leave_type]')}
-                - Applied Date: {data.get('rowData[date_Applied]')}
-                - From Date: {data.get('rowData[from_Date]')}
-                - To Date: {data.get('rowData[to_Date]')}
-                - Reason: {data.get('rowData[reason]')}
-                - Session: {data.get('rowData[session]')}
-                - Remaining Leave: {data.get('rowData[remaining]')}
-                - Total Leave: {data.get('rowData[total_leave]')}
-
-                Status: {data.get('action')}
-
-                If you have any questions or concerns, please feel free to contact us.
-
-                Best regards,
-                    Administrative Office,
-                    Sri Ramakrishna Engineering College,
-                    Vattamalaipalayam,
-                    Coimbatore - 641022.
-                """
                 
-
                 send_email(subject, body, to_email)
 
             elif leave_type == 'Special Onduty':
@@ -2361,32 +2363,6 @@ def requests_handling(request):
                 result.update(status=data.get('action'))
 
                 subject = "Leave Update"
-                body = f"""
-                Hello {data.get('rowData[username]')},
-
-                We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
-
-                Request Details:
-                - Leave Type: {data.get('rowData[leave_type]')}
-                - Applied Date: {data.get('rowData[date_Applied]')}
-                - From Date: {data.get('rowData[from_Date]')}
-                - To Date: {data.get('rowData[to_Date]')}
-                - Reason: {data.get('rowData[reason]')}
-                - Session: {data.get('rowData[session]')}
-                - Remaining Leave: {data.get('rowData[remaining]')}
-                - Total Leave: {data.get('rowData[total_leave]')}
-
-                Status: {data.get('action')}
-
-                If you have any questions or concerns, please feel free to contact us.
-
-                Best regards,
-                    Administrative Office,
-                    Sri Ramakrishna Engineering College,  
-                    Vattamalaipalayam,
-                    Coimbatore - 641022.  
-                """
-                
 
                 send_email(subject, body, to_email)
 
@@ -2396,32 +2372,6 @@ def requests_handling(request):
                 result = specialOnduty.objects.filter(unique_id = unique_id)
                 result.update(status=data.get('action'))
                 subject = "Leave Update"
-                body = f"""
-                Hello {data.get('rowData[username]')},
-
-                We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
-
-                Request Details:
-                - Leave Type: {data.get('rowData[leave_type]')}
-                - Applied Date: {data.get('rowData[date_Applied]')}
-                - From Date: {data.get('rowData[from_Date]')}
-                - To Date: {data.get('rowData[to_Date]')}
-                - Reason: {data.get('rowData[reason]')}
-                - Session: {data.get('rowData[session]')}
-                - Remaining Leave: {data.get('rowData[remaining]')}
-                - Total Leave: {data.get('rowData[total_leave]')}
-
-                Status: {data.get('action')}
-
-                If you have any questions or concerns, please feel free to contact us.
-
-                Best regards,
-                    Administrative Office,
-                    Sri Ramakrishna Engineering College,  
-                    Vattamalaipalayam,
-                    Coimbatore - 641022.  
-                """
-                
 
                 send_email(subject, body, to_email)
 
@@ -2440,32 +2390,7 @@ def requests_handling(request):
 
 
                 subject = "Leave Update"
-                body = f"""
-                Hello {data.get('rowData[username]')},
-
-                We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
-
-                Request Details:
-                - Leave Type: {data.get('rowData[leave_type]')}
-                - Applied Date: {data.get('rowData[date_Applied]')}
-                - From Date: {data.get('rowData[from_Date]')}
-                - To Date: {data.get('rowData[to_Date]')}
-                - Reason: {data.get('rowData[reason]')}
-                - Session: {data.get('rowData[session]')}
-                - Remaining Leave: {data.get('rowData[remaining]')}
-                - Total Leave: {data.get('rowData[total_leave]')}
-
-                Status: {data.get('action')}
-
-                If you have any questions or concerns, please feel free to contact us.
-
-                Best regards,
-                    Administrative Office,
-                    Sri Ramakrishna Engineering College,  
-                    Vattamalaipalayam,
-                    Coimbatore - 641022.  
-                """
-                
+ 
                 send_email(subject, body, to_email)
 
                 print("Approved")
@@ -2475,32 +2400,7 @@ def requests_handling(request):
                 result.update(status=data.get('action'))
 
                 subject = "Leave Update"
-                body = f"""
-                Hello {data.get('rowData[username]')},
-
-                We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
-
-                Request Details:
-                - Leave Type: {data.get('rowData[leave_type]')}
-                - Applied Date: {data.get('rowData[date_Applied]')}
-                - From Date: {data.get('rowData[from_Date]')}
-                - To Date: {data.get('rowData[to_Date]')}
-                - Reason: {data.get('rowData[reason]')}
-                - Session: {data.get('rowData[session]')}
-                - Remaining Leave: {data.get('rowData[remaining]')}
-                - Total Leave: {data.get('rowData[total_leave]')}
-
-                Status: {data.get('action')}
-
-                If you have any questions or concerns, please feel free to contact us.
-
-                Best regards,
-                    Administrative Office,
-                    Sri Ramakrishna Engineering College,  
-                    Vattamalaipalayam,
-                    Coimbatore - 641022.  
-                """
-                
+            
                 send_email(subject, body, to_email)
 
                 print("Approved")
@@ -2526,32 +2426,7 @@ def requests_handling(request):
                     # filterered.update(ch_avail =( remaining))
 
                 subject = "Leave Update"
-                body = f"""
-                Hello {data.get('rowData[username]')},
-
-                We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
-
-                Request Details:
-                - Leave Type: {data.get('rowData[leave_type]')}
-                - Applied Date: {data.get('rowData[date_Applied]')}
-                - From Date: {data.get('rowData[from_Date]')}
-                - To Date: {data.get('rowData[to_Date]')}
-                - Reason: {data.get('rowData[reason]')}
-                - Session: {data.get('rowData[session]')}
-                - Remaining Leave: {data.get('rowData[remaining]')}
-                - Total Leave: {data.get('rowData[total_leave]')}
-
-                Status: {data.get('action')}
-
-                If you have any questions or concerns, please feel free to contact us.
-
-                Best regards,
-                    Administrative Office,
-                    Sri Ramakrishna Engineering College,  
-                    Vattamalaipalayam,
-                    Coimbatore - 641022.  
-                """
-                
+   
 
                 send_email(subject, body, to_email)
 
@@ -2584,33 +2459,6 @@ def requests_handling(request):
                 # remaining = least_remaining_value
 
                     subject = "Leave Update"
-                    body = f"""
-
-    Hello {data.get('rowData[username]')},
-
-    We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
-
-    Request Details:
-    - Leave Type: {data.get('rowData[leave_type]')}
-    - Applied Date: {data.get('rowData[date_Applied]')}
-    - From Date: {data.get('rowData[from_Date]')}
-    - To Date: {data.get('rowData[to_Date]')}
-    - Reason: {data.get('rowData[reason]')}
-    - Session: {data.get('rowData[session]')}
-    - Remaining Leave: {remaining}
-    - Total Leave: {data.get('rowData[total_leave]')}
-
-    Status: {data.get('action')}
-
-    If you have any questions or concerns, please feel free to contact us.
-
-    Best regards,
-        Administrative Office,  
-        Sri Ramakrishna Engineering College,    
-        Vattamalaipalayam,  
-        Coimbatore - 641022.    
-    """
-                
 
                     send_email(subject, body, to_email)
 
@@ -2635,33 +2483,6 @@ def requests_handling(request):
 
 
                 subject = "Leave Update"
-                body = f"""
-                Hello {data.get('rowData[username]')},
-
-                We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
-
-                Request Details:
-                - Leave Type: {data.get('rowData[leave_type]')}
-                - Applied Date: {data.get('rowData[date_Applied]')}
-                - From Date: {data.get('rowData[from_Date]')}
-                - To Date: {data.get('rowData[to_Date]')}
-                - Reason: {data.get('rowData[reason]')}
-                - Session: {data.get('rowData[session]')}
-                - Remaining Leave: {float(remaining)}
-                - Total Leave: {data.get('rowData[total_leave]')}
-
-                Status: {data.get('action')}    
-
-                If you have any questions or concerns, please feel free to contact us.
-
-                Best regards,
-                    Administrative Office,  
-                    Sri Ramakrishna Engineering College,    
-                    Vattamalaipalayam,  
-                    Coimbatore - 641022.    
-                """
-                
-
 
                 send_email(subject, body, to_email)
 
@@ -2680,34 +2501,6 @@ def requests_handling(request):
                     reducing_remaining.save()
 
                 subject = "Leave Update"
-                body = f"""
-                Hello {data.get('rowData[username]')},
-
-                We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
-
-                Request Details:
-                - Leave Type: {data.get('rowData[leave_type]')}
-                - Applied Date: {data.get('rowData[date_Applied]')}
-                - From Date: {data.get('rowData[from_Date]')}
-                - To Date: {data.get('rowData[to_Date]')}
-                - Reason: {data.get('rowData[reason]')}
-                - Session: {data.get('rowData[session]')}
-                - Remaining Leave: {remaining}
-                - Total Leave: {data.get('rowData[total_leave]')}
-
-                Status: {data.get('action')}    
-
-                If you have any questions or concerns, please feel free to contact us.
-
-                Best regards,
-                    Administrative Office,  
-                    Sri Ramakrishna Engineering College,    
-                    Vattamalaipalayam,  
-                    Coimbatore - 641022.    
-                """
-                
-
-
 
                 send_email(subject, body, to_email)
 
@@ -2727,32 +2520,6 @@ def requests_handling(request):
                     # print('leasst',least_remaining_value )
 
                 subject = "Leave Update"
-                body = f"""
-                Hello {data.get('rowData[username]')},
-
-                We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
-
-                Request Details:
-                - Leave Type: {data.get('rowData[leave_type]')}
-                - Applied Date: {data.get('rowData[date_Applied]')}
-                - From Date: {data.get('rowData[from_Date]')}
-                - To Date: {data.get('rowData[to_Date]')}
-                - Reason: {data.get('rowData[reason]')}
-                - Session: {data.get('rowData[session]')}
-                - Remaining Leave: {remaining}
-                - Total Leave: {data.get('rowData[total_leave]')}
-
-                Status: {data.get('action')}    
-
-                If you have any questions or concerns, please feel free to contact us.
-
-                Best regards,
-                    Administrative Office,  
-                    Sri Ramakrishna Engineering College,    
-                    Vattamalaipalayam,  
-                    Coimbatore - 641022.    
-                """
-                
 
 
                 send_email(subject, body, to_email)
@@ -2780,32 +2547,6 @@ def requests_handling(request):
 
 
                 subject = "Leave Update"
-                body = f"""
-                Hello {data.get('rowData[username]')},
-
-                We would like to inform you that your {data.get('rowData[leave_type]')} request, applied on {data.get('rowData[date_Applied]')}, has been {data.get('action')}.
-
-                Request Details:
-                - Leave Type: {data.get('rowData[leave_type]')}
-                - Applied Date: {data.get('rowData[date_Applied]')}
-                - From Date: {data.get('rowData[from_Date]')}
-                - To Date: {data.get('rowData[to_Date]')}
-                - Reason: {data.get('rowData[reason]')}
-                - Session: {data.get('rowData[session]')}
-                - Remaining Leave: {remaining}
-                - Total Leave: {data.get('rowData[total_leave]')}
-
-                Status: {data.get('action')}    
-
-                If you have any questions or concerns, please feel free to contact us.
-
-                Best regards,
-                    Administrative Office,  
-                    Sri Ramakrishna Engineering College,    
-                    Vattamalaipalayam,  
-                    Coimbatore - 641022.    
-                """
-                
 
 
                 send_email(subject, body, to_email)
@@ -3260,9 +3001,13 @@ def update_password(request):
         new_password = request.POST.get("new_password")
         confirm_password = request.POST.get("confirm_password")
         email = request.POST.get("email")
-        user = User.objects.get(email=email)  # Retrieve the User object
+        user = User.objects.get(email=email)
+        print(user.username)  # Retrieve the User object
 
         if new_password == confirm_password:
+            pass_staff = StaffDetails.objects.get(username_copy = user.username)
+            pass_staff.password = new_password
+            pass_staff.save()
             # Set the new password for the current user
             user.set_password(new_password)
             user.save()

@@ -20,6 +20,7 @@ class StaffDetails(models.Model):
     username_copy = models.CharField(max_length=150, blank=True, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+    password = models.CharField(max_length=100,default='-')
     department = models.CharField(max_length=100)
     doj = models.DateField()  # Date of joining
     otp = models.IntegerField(default=0)

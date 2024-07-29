@@ -737,29 +737,7 @@
                 </a>
                 </div>
               </div>
-              <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                  <a href="{% url 'LopLeave' %}">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-icon">
-                        <div
-                          class="icon-big text-center icon-warning bubble-shadow-small"
-                        >
-                        <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                      </div>
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <h4 class="card-title">LOP Leave</h4>
-                          <p class="card-category">Last Applied : {{last_leave.LOP_leave}}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-                </div>
-              </div>
+              
               <div class="col-sm-6 col-md-3">
                 <div class="card card-stats card-round">
                   <a href="{% url 'EarnLeave' %}">
@@ -825,36 +803,14 @@
                 </a>
                 </div>
               </div>
-              <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
-                  <a href="{% url 'SpecialOnDuty' %}">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-icon">
-                        <div
-                          class="icon-big text-center icon-info bubble-shadow-small"
-                        >
-                        <i class="fas fa-briefcase"></i>
-                        </div>
-                      </div>
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <h4 class="card-title">Special OD</h4>
-                          <p class="card-category">Last Applied : {{last_leave.specialOnduty}}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-                </div>
-              </div>
+             
               <div class="col-sm-6 col-md-3">
                 <div class="card card-stats card-round">
                   <a href="{% url 'CHLeave' %}">
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-icon">
-                        <div class="icon-big text-center icon-primary bubble-shadow-small">
+                        <div class="icon-big text-center icon-info bubble-shadow-small">
                           <span class="number">{{total_days.4}}</span> <!-- Number in place of the icon -->
                       </div>
                       </div>
@@ -875,7 +831,7 @@
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-icon">
-                        <div class="icon-big text-center icon-danger bubble-shadow-small">
+                        <div class="icon-big text-center icon-success bubble-shadow-small">
                           <span class="number">{{total_days.3}}</span> <!-- Number in place of the icon -->
                       </div>
                       </div>
@@ -883,6 +839,53 @@
                         <div class="numbers">
                           <h4 class="card-title">Medical Leave</h4>
                           <p class="card-category">Last Applied : {{last_leave.medicalLeave}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <a href="{% url 'SpecialOnDuty' %}">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-primary bubble-shadow-small"
+                        >
+                        <i class="fas fa-briefcase"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <h4 class="card-title">Special OD</h4>
+                          <p class="card-category">Last Applied : {{last_leave.specialOnduty}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <a href="{% url 'LopLeave' %}">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-warning bubble-shadow-small"
+                        >
+                        <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <h4 class="card-title">LOP Leave</h4>
+                          <p class="card-category">Last Applied : {{last_leave.LOP_leave}}</p>
                         </div>
                       </div>
                     </div>
