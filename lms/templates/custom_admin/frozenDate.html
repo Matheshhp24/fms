@@ -1,0 +1,27 @@
+<!-- freeze_dates.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freeze Dates</title>
+</head>
+<body>
+    <h2>Freeze Dates</h2>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <label for="freeze_date">Select Date to Freeze:</label>
+        <input type="date" id="freeze_date" name="freeze_date" required>
+        <button type="submit">Freeze Date</button>
+    </form>
+    
+    <h3>Currently Frozen Dates</h3>
+    <ul>
+        {% for frozen_date in frozen_dates %}
+            <li>{{ frozen_date.date }}</li>
+        {% empty %}
+            <li>No dates are currently frozen.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

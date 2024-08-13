@@ -47,7 +47,7 @@
       .logo a {
           display: none; /* Hide all logos by default */
       }
-  
+
       /* Display the laptop logo for screens wider than 768px */
       @media (min-width: 769px) {
             .logo a.laptop-logo {
@@ -86,7 +86,7 @@
 
 .support-icon:hover {
     background-color: #0056b3;
-}   
+}
   </style>
   </head>
   <body>
@@ -98,7 +98,7 @@
           <div class="logo-header" data-background-color="dark">
             <div class="logo" id="logo">
               <!-- This image will be displayed on laptop/desktop screens -->
-           
+
                 <!-- This image will be displayed on laptop/desktop screens -->
                 <a href="{% url 'Home' %}" class="laptop-logo">
                     <img src="../static/assets/img/kaiadmin/sreclogo.jpg" alt="Navbar Brand" height="50">
@@ -108,9 +108,9 @@
                 <a href="{% url 'Home' %}" class="mobile-logo">
                     <img src="../static/assets/img/kaiadmin/sreclogo1.jpg" alt="Navbar Brand" height="35">
                 </a>
-            
+
           </div>
-            
+
             <div class="nav-toggle">
               <button class="btn btn-toggle toggle-sidebar">
                 <i class="gg-menu-right"></i>
@@ -161,16 +161,16 @@
                     </li>
                   </ul>
                 </div>
-                
+
               </li>
               <li class="nav-item">
                 <a  href="{% url 'Announcement' %}">
                   <i class="fas fa-bullhorn"></i>
-                  <p>Announcement</p>               
-                </a>       
+                  <p>Announcement</p>
+                </a>
               </li>
-              
-              
+
+
               <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#maps">
                   <i class="fas fa-download"></i>
@@ -239,10 +239,10 @@
               <li class="nav-item">
                 <a  href="{% url 'Profile' %}">
                   <i class="fas fa-user"></i>
-                  <p>My Profile</p>               
-                </a>       
+                  <p>My Profile</p>
+                </a>
               </li>
-              
+
               <li class="nav-item">
                 <a href="#" class="nav-link" onclick="logout(event)">
                   <i class="fas fa-sign-out-alt"></i>
@@ -261,12 +261,12 @@
               <li class="nav-item">
                 <a  href="{% url 'AccountSettings' %}">
                   <i class="fas fa-cogs"></i>
-                  <p>Account Settings</p>               
-                </a>       
+                  <p>Account Settings</p>
+                </a>
               </li>
-              
-              
-              
+
+
+
              </ul>
           </div>
         </div>
@@ -320,8 +320,8 @@
               </nav>
               <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
               <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-              
-            <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">      
+
+            <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
 
               <li class="nav-item topbar-icon dropdown hidden-caret">
                   <a
@@ -375,7 +375,7 @@
                       </div>
                     </li>
                     <li>
-                      
+
                     </li>
                   </ul>
                 </li>
@@ -517,19 +517,19 @@
                           document.getElementById('logoutForm').submit(); // Submit the hidden form
                         }
                         </script>
-                        
+
                       </li>
                     </div>
                   </ul>
                 </li>
             </ul>
-            
+
             </div>
           </nav>
           <!-- End Navbar -->
         </div>
 
-        
+
         <div class="container">
           <div class="page-inner">
             <div class="page-header">
@@ -549,7 +549,7 @@
               </ul>
             </div>
             <div class="row">
-             
+
 
               <div class="col-md-12">
                 <div class="card">
@@ -561,7 +561,6 @@
                       <table class="table table-bordered table-responsive-md" id="leave-table" style="color: rgb(0, 0, 0);">
                         <thead>
                           <tr>
-                            <th scope="col">Name</th>
                             <th scope="col">Type</th>
                             <th scope="col">Applied</th>
                             <th scope="col">On/From</th>
@@ -569,6 +568,7 @@
                             <th scope="col">Session</th>
                             <th scope="col">Remaining</th>
                             <th scope="col">Day(s)</th>
+                            <th scope="col">Reason</th>
                             <th scope="col">Status</th>
                           </tr>
                         </thead>
@@ -584,7 +584,7 @@
                         var hours = ("0" + date.getHours()).slice(-2);
                         var minutes = ("0" + date.getMinutes()).slice(-2);
                         var seconds = ("0" + date.getSeconds()).slice(-2);
-                        return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;  // Format: yyyy/mm/dd hh:mm:ss
+                        return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;  // Format: yyyy/mm/dd hh:mm:ss
                       }
                       function formatDatefrom(isoDateStr) {
                       var date = new Date(isoDateStr);
@@ -592,18 +592,17 @@
                       console.log(isoDateStr)
                       var month = ("0" + (date.getMonth() + 1)).slice(-2);
                       var day = ("0" + date.getDate()).slice(-2);
-                      return `${year}/${month}/${day}`; // Format: yyyy/mm/dd
-                      }                     
+                      return `${day}-${month}-${year}`; // Format: yyyy/mm/dd
+                      }
                         // Data passed from Django context
                         var data_list = {{ data_dics|safe }};
-                      
+
                         // Function to populate the table
                         function populateTable(dataList) {
                           var tableBody = $('#leave-table-body');
-                      
+
                           for (var i = 0; i < dataList.length; i++) {
                             var row = $('<tr>');
-                            row.append($('<td>').text(dataList[i]['username']));
                             row.append($('<td>').text(dataList[i]['leave_type']));
                             row.append($('<td>').text(formatDate(dataList[i]['date_Applied'])));
                             row.append($('<td>').text(formatDatefrom(dataList[i]['from_Date'])));
@@ -611,16 +610,17 @@
                             row.append($('<td>').text(dataList[i]['session']));
                             row.append($('<td>').text(dataList[i]['remaining']));
                             row.append($('<td>').text(dataList[i]['total_leave']));
+                            row.append($('<td>').text(dataList[i]['reason']));
                             row.append($('<td>').text(dataList[i]['status']));
                             tableBody.append(row);
                           }
                         }
-                      
+
                         // Initialize DataTable
                         $(document).ready(function() {
                           // Call the function to populate the table with the Django data
                           populateTable(data_list);
-                      
+
                           // Initialize DataTable after populating data
                           $('#leave-table').DataTable({
                             pageLength: 5,
@@ -635,12 +635,12 @@
                                     .appendTo($(column.footer()).empty())
                                     .on("change", function () {
                                       var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                      
+
                                       column
                                         .search(val ? "^" + val + "$" : "", true, false)
                                         .draw();
                                     });
-                      
+
                                   column
                                     .data()
                                     .unique()
@@ -737,10 +737,10 @@
         });
       });
     </script>
-    
 
 
-        
+
+
     </div>
 
     <!-- <script src="../static/assets/js/core/jquery-3.7.1.min.js"></script> -->

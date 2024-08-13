@@ -9,15 +9,15 @@
     <meta content="" name="description">
 
     <!-- Favicon -->
-     
+
     <link href="../../static/img/sreclogo.jpg" rel="icon">
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
 
-    
+
+
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -43,21 +43,21 @@
     body {
         zoom: 110%;
     }
-    
+
     .small {
         font-size: 10px; /* Adjust the font size as needed */
     }
-    
+
     .announcement-container {
         position: relative;
     }
-    
+
     .close-button {
         position: absolute;
         right: 0;
         top: 0;
     }
-    
+
 
     </style>
 </head>
@@ -76,7 +76,7 @@
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
-               
+
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
                         <img class="rounded-circle" src="../../static/img/sreclogo.jpg" alt="" style="width: 40px; height: 40px;">
@@ -84,7 +84,7 @@
                     </div>
                     <div class="ms-3">
                         <h6 class="mb-0">SREC</h6>
-                        <span>Admin {{ admin }}</span>
+                        <span>Admin</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
@@ -94,30 +94,40 @@
                     <a href="{% url 'AdminPage' %}" class="nav-item nav-link "><i class="fas fa-tachometer-alt"></i> Admin panel</a>
                     {% endif %}
                     {% if is_hod %}
-                        <a href="{% url 'HODNewRequests' %}" class="nav-item nav-link"><i class="fas fa-keyboard"></i> New Requests
+                        <a href="{% url 'HODNewRequests' %}" class="nav-item nav-link "><i class="fas fa-keyboard"></i> New Requests
+                    {% elif is_principal %}
+                        <a href="{% url 'NewRequests' %}" class="nav-item nav-link "><i class="fas fa-keyboard"></i> New Requests
                     {% else %}
-                        <a href="{% url 'NewRequests' %}" class="nav-item nav-link"><i class="fas fa-keyboard"></i> New Requests   
+
                     {% endif %}
-                        {% if pending > 0 %}
-                            <span class="badge bg-danger rounded-pill"> {{ pending }}</span>
-                        {% else %}
-                            <span></span>
-                        {% endif %}
-                    </a>
-                    
+                    {%if is_principal or is_hod %}
+                    {% if pending > 0 %}
+                        <span class="badge bg-danger rounded-pill"> {{ pending }}</span>
+                    {% else %}
+                        <span></span>
+                    {% endif %}
+                {% else %}
+                {% endif %}
+                </a>
+
+
                     {% if is_hod %}
+                    {% elif is_principal %}
                     {% else %}
                     <a href="{% url 'AddStaff' %}" class="nav-item nav-link"><i class="fas fa-user-plus"></i> Add Staff </a>
                     {% endif %}
                     {% if is_hod %}
+                    {% elif is_principal %}
                     {% else %}
                     <a href="{% url 'DeleteStaffView' %}" class="nav-item nav-link"><i class="fas fa-user-minus"></i> Delete Staff </a>
                     {% endif %}
                     {% if is_hod %}
+                    {% elif is_principal %}
                     {% else %}
                     <a href="{% url 'EditStaffView' %}" class="nav-item nav-link"><i class="fas fa-user-edit"></i> Edit Staff </a>
                     {% endif %}
                     {% if is_hod %}
+                    {% elif is_principal %}
                     {% else %}
                     <a href="{% url 'AvailLeaveView' %}" class="nav-item nav-link"><i class="fas fa-calendar-check"></i> Avail Leave</a>
                     {% endif %}
@@ -136,6 +146,7 @@
                     {% else %}
                     <a href="{% url 'AdminAccount' %}" class="nav-item nav-link "><i class="fas fa-cogs"></i>Account</a>
                     {% endif %}
+
                 </div>
             </nav>
         </div>
@@ -152,7 +163,7 @@
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
-                <p class="d-none d-md-flex ms-4 border-0" style="padding-top: 15px;">HR Panel</p>
+                <p class="d-none d-md-flex ms-4 border-0" style="padding-top: 15px;">Admin Panel</p>
                 <!-- <form class="d-none d-md-flex ms-4">
                     <input class="form-control border-0" type="search" placeholder="Search">
                 </form> -->
@@ -198,11 +209,11 @@
                                 {% endif %}
                             </a>
                             <hr class="dropdown-divider">
-                            
+
                         </div>
                     </div>
                     {% endif %}
-                    
+
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2" src="../../static/img/sreclogo.jpg" alt="" style="width: 40px; height: 40px;">
@@ -218,7 +229,7 @@
                                 {% csrf_token %}
                             <button type="submit" class="dropdown-item">Log Out</button>
                             </form>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -236,7 +247,7 @@
                 {% endfor %}
             </div>
         {% endif %}
-        
+
             <!-- Form Start -->
             <div class="container mt-5">
                 <div class="form-group">
@@ -253,7 +264,7 @@
                     </button>
                 </div><br>
                 <h2 class="mb-4">Staff Members</h2>
-                
+
                     {% csrf_token %}
                     <table class="table table-hover">
                         <thead class="thead-dark">
@@ -269,7 +280,7 @@
                         </thead>
                         <tbody>
                             {% for staff_member in staff_members %}
-                            
+
                                 <tr>
                                     <!-- <td><input type="checkbox" class="user_checkbox" name="selected_users" value="{{ staff_member.username }}"></td> -->
                                     <th scope="row">{{ forloop.counter }}</th>
@@ -281,17 +292,17 @@
                                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal{{ staff_member.username }}">
                                             <i class="fas fa-download"> </i> Download
                                         </button>
-            
+
                                         <div class="modal" id="myModal{{ staff_member.username }}">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-            
+
                                                     <!-- Modal Header -->
                                                     <div class="modal-header">
                                                         <h4 class="modal-title">Download {{staff_member.username}}  <i class="fas fa-download"></i></h4>
                                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     </div>
-            
+
                                                     <!-- Modal Body -->
                                                     {% if is_hod %}
                                                     <form action="{% url 'HODDownload' staff_member.username %}" method="post">
@@ -319,20 +330,20 @@
                                                             <button type="submit" class="btn btn-info"><i class="fas fa-download"></i> Download</button>
                                                         </div>
                                                     </form>
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="modal" id="secondmodal">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-            
+
                                                     <!-- Modal Header -->
                                                     <div class="modal-header">
                                                         <h4 class="modal-title">Download All  <i class="fas fa-download"></i></h4>
                                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                     </div>
-            
+
                                                     <!-- Modal Body -->
                                                     {% if is_hod %}
                                                     <form action="{% url 'HODDownloadAll' %}" method="post">
@@ -360,11 +371,11 @@
                                                             <button type="submit" class="btn btn-info"><i class="fas fa-download"></i> Download</button>
                                                         </div>
                                                     </form>
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>
-                                       
+
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -374,7 +385,7 @@
                         <i class="fas fa-calendar-check"> </i> Avail
                     </button> -->
             </div>
-            
+
             <script>
                 document.getElementById('select_all').onclick = function() {
                     var checkboxes = document.getElementsByClassName('user_checkbox');
@@ -383,11 +394,11 @@
                     }
                 }
             </script>
-            
+
             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        
+
         <!-- Content End -->
 
 

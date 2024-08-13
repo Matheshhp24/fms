@@ -231,6 +231,8 @@
                 <!-- Placeholder for Approved Table -->
         <div class="col-md-12" id="approved-table-container" style="display: none;">
             <div class="card">
+                
+
                 <div class="card-header">
                     <h4 class="card-title">Approved</h4>
                 </div>
@@ -255,6 +257,40 @@
                             </thead>
                             <tbody></tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- jQuery -->
+
+<!-- Bootstrap JS (for modal functionality) -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+
+<!-- DataTables JS -->
+<!-- <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script> -->
+
+        <!-- Decline Modal -->
+        <div class="modal fade" id="declineModal" tabindex="-1" role="dialog" aria-labelledby="declineModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="declineModalLabel">Decline Leave Request</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="decline-form">
+                            <div class="form-group">
+                                <label for="decline-reason">Reason for Decline</label>
+                                <textarea class="form-control" id="decline-reason" rows="3" required></textarea>
+                            </div>
+                            <input type="hidden" id="decline-username">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" id="confirm-decline">Decline</button>
                     </div>
                 </div>
             </div>
@@ -335,7 +371,7 @@
             <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
         
             <!-- Bootstrap JS (for dropdown) -->
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+            <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script> -->
             
             <script>
                 $(document).ready(function() {
@@ -365,8 +401,23 @@
                             row.append($('<td>').text(dataList[i]['session']));
                             row.append($('<td>').text(dataList[i]['remaining']));
                             row.append($('<td>').text(dataList[i]['total_leave']));
-                            row.append($('<td>').html(dataList[i]['document_url'] && dataList[i]['document_url'] !== "/" ? `<a href="${dataList[i]['document_url']}" target="_blank">View</a>` : 'No document'));
-                            
+
+                                 // Conditional cell for document URL
+                            let documentUrl = admin_list[i]['document_url'];3
+                            console.log(documentUrl)
+                            let documentCell;
+
+                            if (documentUrl && documentUrl !== "/media/") {
+                                // URL exists and is not just a placeholder
+                                documentCell = $('<td>').html(`<a href="${documentUrl}" target="_blank">View</a>`);
+                            } else {
+                                // No URL or placeholder
+                                documentCell = $('<td>').html('<span>No document</span>');
+                            }
+
+                            // Append the document cell
+                            row.append(documentCell);
+
                             // Create Action cell with approve/decline buttons
                             var actionCell = $('<td>');
                             var approveBtn = $('<button>', {
@@ -375,10 +426,10 @@
                                 click: createButtonClickHandler(dataList[i], 'Approved')
                             });
                             var declineBtn = $('<button>', {
-                                text: 'Decline',
-                                class: 'btn btn-danger ml-2 btn-decline static-size',
-                                click: createButtonClickHandler(dataList[i], 'Declined')
-                            });
+                            text: 'Decline',
+                            class: 'btn btn-danger ml-2 btn-decline static-size',
+                            click: createDeclineClickHandler(dataList[i],row,'Declined')
+                        });
                             actionCell.append(approveBtn);
                             actionCell.append(declineBtn);
                             row.append(actionCell);
@@ -397,20 +448,52 @@
                         };
                     }
         
+                    function createDeclineClickHandler(data,row,action) {
+                        return function () {
+                            currentdata = data;
+                            currentrow = row;
+                            currenaction = action;
+
+                            // console.log(reason);
+                            $('#decline-username').val(data.username);
+                            $('#declineModal').modal('show');
+                        };
+                    }
+
+                    // Handle decline confirmation
+                    $('#confirm-decline').click(function() {
+                        var username = $('#decline-username').val();
+                        var reason = $('#decline-reason').val();
+
+                        // console.log(reason);
+                        
+                        
+                        $('#declineModal').modal('hide');
+                        $('#leave-table').DataTable().row(currentrow).remove().draw();
+                        performLeaveAction(currentdata, 'Declined',reason);
+
+                    });
+
+                    // Ensure modal close button works
+                    $('.close, .btn-secondary').click(function() {
+                        $('#declineModal').modal('hide');
+                    });
                     // Function to perform leave action (you can customize this)
-                    function performLeaveAction(data, action) {
+                    function performLeaveAction(data, action,reason=null) {
                         // console.log("Action:", action, "Row Data:", data);
+                        console.log("decreason",reason)
                         $.ajax({
                             url: '/requests-handling/',
                             method: 'POST',
                             data: {
                                 rowData: data,
                                 action: action,
+                                decreason : reason,
                                 csrfmiddlewaretoken: '{{ csrf_token }}',
                                 partial: 'yes'
                             },
                             success: function (response) {
-                                // console.log('Success:', response);
+                                console.log('Success:', response);
                             },
                             error: function (error) {
                                 // console.error('Error:', error);
@@ -461,8 +544,22 @@
                         row.append($('<td>').text(admin_list[i]['session']));
                         row.append($('<td>').text(admin_list[i]['remaining']));
                         row.append($('<td>').text(admin_list[i]['total_leave']));
-                        row.append($('<td>').html(admin_list[i]['document_url'] && admin_list[i]['document_url'] !== "/" ? `<a href="${admin_list[i]['document_url']}" target="_blank">View</a>` : 'No document'));
+                         // Conditional cell for document URL
+                        let documentUrl = admin_list[i]['document_url'];
+                        let documentCell;
 
+                        if (documentUrl && documentUrl !== "/media/") {
+                            // URL exists and is not just a placeholder
+                            documentCell = $('<td>').html(`<a href="${documentUrl}" target="_blank">View</a>`);
+                        } else {
+                            // No URL or placeholder
+                            documentCell = $('<td>').html('<span>No document</span>');
+                        }
+
+                        // Append the document cell
+                        row.append(documentCell);
+
+                        // Append the row to the table body
                         tableBody.append(row);
                     }
                 }

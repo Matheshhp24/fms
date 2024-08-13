@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-e1x_^6_v%*1pc2+2zq14(&k)xmd6-#bet-7a_jfn-7as4hbbg_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['192.168.168.178']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -85,6 +85,17 @@ DATABASES = {
     }
 }
 
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'leave_management_system',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
